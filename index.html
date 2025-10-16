@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HR Dashboard - MotorPH</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { display: flex; min-height: 100vh; background-color: #f4f6f9; }
+
+    .sidebar {
+      width: 240px;
+      background-color: #fff;
+      border-right: 1px solid #e0e0e0;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar .top-section { padding: 20px; border-bottom: 1px solid #eee; }
+    .logo { font-size: 1.6rem; color: #2c3e50; font-weight: bold; }
+    .user-info { display: flex; align-items: center; margin-top: 10px; }
+    .user-info .avatar {
+      width: 48px; height: 48px;
+      background: #ccc; border-radius: 50%; margin-right: 10px;
+    }
+    .user-info .details { line-height: 1.2; }
+    .user-info .details small { color: #666; }
+
+    nav, .bottom-nav {
+      display: flex; flex-direction: column; padding: 20px;
+    }
+    nav a, .bottom-nav a {
+      display: flex; align-items: center;
+      padding: 10px 12px; margin-bottom: 8px;
+      background: #f8f9fa;
+      text-decoration: none; color: #333;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    nav a:hover, .bottom-nav a:hover { background: #e2e8f0; }
+    .icon {
+      width: 20px; height: 20px;
+      background: #999; border-radius: 4px; margin-right: 10px;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: #fff;
+      border-bottom: 1px solid #ddd;
+      flex-wrap: wrap;
+    }
+    .search-box {
+      position: relative;
+      max-width: 300px;
+      flex: 1;
+    }
+    .search-box input {
+      width: 100%; padding: 8px 16px;
+      border-radius: 24px; border: 1px solid #ccc;
+    }
+    .topbar .title { font-size: 1.5rem; color: #333; }
+    .profile-icon {
+      width: 36px; height: 36px;
+      background: #ccc; border-radius: 50%;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 24px;
+    }
+    .card {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      flex: 1 1 200px;
+      min-width: 180px;
+      position: relative;
+    }
+    .card .value { font-size: 1.8rem; font-weight: bold; margin-bottom: 4px; color: #222; }
+    .card .label { color: #666; }
+    .trend {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .up { color: green; }
+    .down { color: red; }
+
+    .panel-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 0 24px 24px;
+    }
+    .panel {
+      background: #fff;
+      flex: 1 1 300px;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .panel h3 {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+    }
+    .list {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .item {
+      padding: 10px 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+    }
+    .item:last-child { border-bottom: none; }
+    .chart-placeholder {
+      height: 180px;
+      background: #eef1f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-style: italic;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .cards, .panel-container { flex-direction: column; }
+      .topbar .title { width: 100%; text-align: center; margin: 10px 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="top-section">
+      <div class="logo">MotorPH</div>
+      <div class="user-info">
+        <div class="avatar"></div>
+        <div class="details">
+          <div>Maria Santos</div>
+          <small>HR & Payroll Officer</small>
+        </div>
+      </div>
+    </div>
+    <nav>
+      <a href="#"><div class="icon"></div>Dashboard</a>
+      <a href="#"><div class="icon"></div>Employees</a>
+      <a href="#"><div class="icon"></div>Payroll</a>
+      <a href="#"><div class="icon"></div>Attendance</a>
+    </nav>
+    <div class="bottom-nav">
+      <a href="#"><div class="icon"></div>Profile</a>
+      <a href="#"><div class="icon"></div>Settings</a>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="search-box">
+        <input type="text" placeholder="Search..." />
+      </div>
+      <div class="title">Dashboard</div>
+      <div class="profile-icon"></div>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="value">256</div>
+        <div class="label">Total Employees</div>
+        <div class="trend up">+5%</div>
+      </div>
+      <div class="card">
+        <div class="value">18</div>
+        <div class="label">Pending Leave Requests</div>
+        <div class="trend down">–12%</div>
+      </div>
+      <div class="card">
+        <div class="value">96%</div>
+        <div class="label">Compliance Rate</div>
+      </div>
+      <div class="card">
+        <div class="value">15</div>
+        <div class="label">New Hires (This Month)</div>
+        <div class="trend up">+25%</div>
+      </div>
+    </div>
+
+    <div class="panel-container">
+      <div class="panel">
+        <h3>Recent Activity</h3>
+        <div class="list">
+          <div class="item"><span>John submitted leave</span><span>2h ago</span></div>
+          <div class="item"><span>Payroll processed</span><span>Yesterday</span></div>
+          <div class="item"><span>Jessica updated profile</span><span>2d ago</span></div>
+          <div class="item"><span>Mark joined</span><span>3d ago</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>New Hires</h3>
+        <div class="list">
+          <div class="item"><span>Mark Santos</span><span>Oct 5</span></div>
+          <div class="item"><span>Paula Gomez</span><span>Oct 3</span></div>
+          <div class="item"><span>Samuel Cruz</span><span>Sep 28</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Employee Growth (6 Months)</h3>
+        <div class="chart-placeholder">[Chart Placeholder]</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
