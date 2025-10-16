@@ -3,155 +3,130 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HR Dashboard - MotorPH</title>
+  <title>HR Dashboard - MotorPH (Interactive Prototype)</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
-    body { display: flex; min-height: 100vh; background-color: #f4f6f9; }
 
+/* MO-IT105 - Human-Computer Interaction Group 1 | A2102
+By: Kirk Martin Sevillano 
+*/
+    /* ===== Base / Reset ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    :root {
+      --bg: #f4f6f9;
+      --card: #fff;
+      --muted: #666;
+      --muted-2: #888;
+      --border: #e0e0e0;
+      --border-2: #ddd;
+      --hover: #e2e8f0;
+      --brand: #2c3e50;
+      --accent: #2563eb;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --warning: #d97706;
+      --shadow: 0 2px 5px rgba(0,0,0,.05);
+      --radius: 12px;
+    }
+    body { display: flex; min-height: 100vh; background: var(--bg); color: #222; }
+
+    /* ===== Sidebar ===== */
     .sidebar {
-      width: 240px;
-      background-color: #fff;
-      border-right: 1px solid #e0e0e0;
-      display: flex;
-      flex-direction: column;
+      width: 260px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh;
     }
     .sidebar .top-section { padding: 20px; border-bottom: 1px solid #eee; }
-    .logo { font-size: 1.6rem; color: #2c3e50; font-weight: bold; }
-    .user-info { display: flex; align-items: center; margin-top: 10px; }
-    .user-info .avatar {
-      width: 48px; height: 48px;
-      background: #ccc; border-radius: 50%; margin-right: 10px;
-    }
-    .user-info .details { line-height: 1.2; }
-    .user-info .details small { color: #666; }
+    .logo { font-size: 1.6rem; color: var(--brand); font-weight: 800; letter-spacing:.3px; }
+    .user-info { display: flex; align-items: center; margin-top: 12px; }
+    .user-info .avatar { width: 48px; height: 48px; background: #cbd5e1; border-radius: 50%; margin-right: 10px; display: grid; place-items: center; font-weight: 700; color: #1f2937; }
+    .user-info .details { line-height: 1.25; }
+    .user-info .details small { color: var(--muted); }
 
-    nav, .bottom-nav {
-      display: flex; flex-direction: column; padding: 20px;
-    }
-    nav a, .bottom-nav a {
-      display: flex; align-items: center;
-      padding: 10px 12px; margin-bottom: 8px;
-      background: #f8f9fa;
-      text-decoration: none; color: #333;
-      border-radius: 6px;
-      transition: background 0.2s;
-    }
-    nav a:hover, .bottom-nav a:hover { background: #e2e8f0; }
-    .icon {
-      width: 20px; height: 20px;
-      background: #999; border-radius: 4px; margin-right: 10px;
-    }
+    nav, .bottom-nav { display: flex; flex-direction: column; padding: 14px; gap: 8px; }
+    .nav-link { display: flex; align-items: center; padding: 10px 12px; border-radius: 8px; text-decoration: none; color: #333; background: #f8f9fa; border: 1px solid transparent; cursor: pointer; }
+    .nav-link:hover { background: var(--hover); }
+    .nav-link.active { background: #eef2ff; border-color: #c7d2fe; color: #1d4ed8; }
+    .icon { width: 20px; height: 20px; background: #9ca3af; border-radius: 4px; margin-right: 10px; }
 
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
+    /* ===== Main & Topbar ===== */
+    .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 24px; background: var(--card); border-bottom: 1px solid var(--border-2); flex-wrap: wrap; position: sticky; top: 0; z-index: 5; }
+    .search-box { position: relative; max-width: 360px; flex: 1; }
+    .search-box input { width: 100%; padding: 10px 36px 10px 14px; border-radius: 24px; border: 1px solid #ccc; }
+    .search-box .clear-btn { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer; font-size: 16px; color: var(--muted-2); }
+    .title { font-size: 1.25rem; color: #333; font-weight: 700; }
+    .profile { position: relative; }
+    .profile-icon { width: 36px; height: 36px; background: #cbd5e1; border-radius: 50%; cursor: pointer; }
+    .profile-menu { position: absolute; right: 0; top: 44px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; box-shadow: var(--shadow); min-width: 180px; display: none; overflow: hidden; }
+    .profile-menu a { display: block; padding: 10px 12px; text-decoration: none; color: #111; }
+    .profile-menu a:hover { background: var(--hover); }
 
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 24px;
-      background: #fff;
-      border-bottom: 1px solid #ddd;
-      flex-wrap: wrap;
-    }
-    .search-box {
-      position: relative;
-      max-width: 300px;
-      flex: 1;
-    }
-    .search-box input {
-      width: 100%; padding: 8px 16px;
-      border-radius: 24px; border: 1px solid #ccc;
-    }
-    .topbar .title { font-size: 1.5rem; color: #333; }
-    .profile-icon {
-      width: 36px; height: 36px;
-      background: #ccc; border-radius: 50%;
-    }
+/* MO-IT105 - Human-Computer Interaction Group 1 | A2102
+By: Kirk Martin Sevillano 
+*/
 
-    .cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 24px;
-    }
-    .card {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      flex: 1 1 200px;
-      min-width: 180px;
-      position: relative;
-    }
-    .card .value { font-size: 1.8rem; font-weight: bold; margin-bottom: 4px; color: #222; }
-    .card .label { color: #666; }
-    .trend {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      font-size: 0.85rem;
-      font-weight: bold;
-    }
-    .up { color: green; }
-    .down { color: red; }
 
-    .panel-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 0 24px 24px;
-    }
-    .panel {
-      background: #fff;
-      flex: 1 1 300px;
-      border-radius: 12px;
-      padding: 16px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    }
-    .panel h3 {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-    }
-    .list {
-      max-height: 200px;
-      overflow-y: auto;
-    }
-    .item {
-      padding: 10px 0;
-      border-bottom: 1px solid #eee;
-      display: flex;
-      justify-content: space-between;
-    }
+    /* ===== Cards ===== */
+    .cards { display: flex; flex-wrap: wrap; gap: 20px; padding: 24px; }
+    .card { background: var(--card); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); flex: 1 1 220px; min-width: 200px; position: relative; cursor: pointer; border: 1px solid transparent; }
+    .card:hover { border-color: #dbeafe; }
+    .card .value { font-size: 1.8rem; font-weight: 800; margin-bottom: 4px; color: #111; }
+    .card .label { color: var(--muted); }
+    .trend { position: absolute; top: 16px; right: 16px; font-size: .85rem; font-weight: 700; }
+    .up { color: var(--success); }
+    .down { color: var(--danger); }
+
+    /* ===== Panels & Tables ===== */
+    .panel-container { display: flex; flex-wrap: wrap; gap: 20px; padding: 0 24px 24px; }
+    .panel { background: var(--card); flex: 1 1 340px; border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow); border: 1px solid transparent; min-width: 300px; }
+    .panel h3 { font-size: 1.1rem; margin-bottom: 12px; }
+    .list { max-height: 240px; overflow-y: auto; }
+    .item { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; gap: 12px; align-items: center; }
     .item:last-child { border-bottom: none; }
-    .chart-placeholder {
-      height: 180px;
-      background: #eef1f4;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #888;
-      font-style: italic;
-      border-radius: 8px;
-    }
+    .tag { font-size: .75rem; padding: 2px 8px; border-radius: 999px; border: 1px solid #e5e7eb; color: #374151; background: #f8fafc; }
 
-    @media (max-width: 768px) {
-      .sidebar { display: none; }
-      .cards, .panel-container { flex-direction: column; }
-      .topbar .title { width: 100%; text-align: center; margin: 10px 0; }
-    }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
+    th { color: #374151; font-weight: 700; background: #f9fafb; position: sticky; top: 0; }
+
+    .chart-placeholder { height: 220px; background: #eef1f4; display: grid; place-items: center; color: var(--muted-2); font-style: italic; border-radius: 8px; }
+    canvas { width: 100%; height: 220px; }
+
+    /* ===== Views (Client-side routing) ===== */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ===== Modal ===== */
+    .modal { position: fixed; inset: 0; display: none; place-items: center; background: rgba(0,0,0,.28); padding: 16px; z-index: 50; }
+    .modal.open { display: grid; }
+    .dialog { width: min(640px, 96vw); background: var(--card); border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.15); overflow: hidden; border: 1px solid var(--border); }
+    .dialog header, .dialog footer { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .dialog footer { border-top: 1px solid var(--border); border-bottom: none; gap: 8px; }
+    .dialog main { padding: 16px; max-height: 60vh; overflow: auto; }
+    .btn { padding: 8px 12px; border-radius: 8px; border: 1px solid #d1d5db; background: #fff; cursor: pointer; }
+    .btn.primary { background: #2563eb; border-color: #1d4ed8; color: white; }
+    .btn.ghost { background: transparent; }
+    .btn.success { background: #16a34a; color: #fff; border-color: #15803d; }
+    .btn.danger { background: #dc2626; color: #fff; border-color: #b91c1c; }
+
+    /* ===== Toast ===== */
+    .toast { position: fixed; right: 16px; bottom: 16px; background: #111827; color: #f9fafb; padding: 10px 14px; border-radius: 10px; box-shadow: var(--shadow); opacity: 0; transform: translateY(8px); pointer-events: none; transition: .25s ease; z-index: 60; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+/* MO-IT105 - Human-Computer Interaction Group 1 | A2102
+By: Kirk Martin Sevillano 
+*/
+
+
+    /* ===== Responsive ===== */
+    @media (max-width: 900px) { .sidebar { display: none; } }
   </style>
 </head>
 <body>
-
-  <div class="sidebar">
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar" aria-label="Primary">
     <div class="top-section">
       <div class="logo">MotorPH</div>
       <div class="user-info">
-        <div class="avatar"></div>
+        <div class="avatar" aria-hidden="true">MS</div>
         <div class="details">
           <div>Maria Santos</div>
           <small>HR & Payroll Officer</small>
@@ -159,72 +134,437 @@
       </div>
     </div>
     <nav>
-      <a href="#"><div class="icon"></div>Dashboard</a>
-      <a href="#"><div class="icon"></div>Employees</a>
-      <a href="#"><div class="icon"></div>Payroll</a>
-      <a href="#"><div class="icon"></div>Attendance</a>
+      <a class="nav-link" data-route="dashboard"><div class="icon"></div>Dashboard</a>
+      <a class="nav-link" data-route="employees"><div class="icon"></div>Employees</a>
+      <a class="nav-link" data-route="payroll"><div class="icon"></div>Payroll</a>
+      <a class="nav-link" data-route="attendance"><div class="icon"></div>Attendance</a>
     </nav>
     <div class="bottom-nav">
-      <a href="#"><div class="icon"></div>Profile</a>
-      <a href="#"><div class="icon"></div>Settings</a>
+      <a class="nav-link" data-route="profile"><div class="icon"></div>Profile</a>
+      <a class="nav-link" data-route="settings"><div class="icon"></div>Settings</a>
     </div>
-  </div>
+  </aside>
 
-  <div class="main">
+  <!-- ===== Main ===== -->
+  <main class="main">
     <div class="topbar">
       <div class="search-box">
-        <input type="text" placeholder="Search..." />
+        <input id="globalSearch" type="text" placeholder="Search employees, requests, actions…" aria-label="Global search"/>
+        <button class="clear-btn" id="clearSearch" title="Clear">×</button>
       </div>
-      <div class="title">Dashboard</div>
-      <div class="profile-icon"></div>
-    </div>
-
-    <div class="cards">
-      <div class="card">
-        <div class="value">256</div>
-        <div class="label">Total Employees</div>
-        <div class="trend up">+5%</div>
-      </div>
-      <div class="card">
-        <div class="value">18</div>
-        <div class="label">Pending Leave Requests</div>
-        <div class="trend down">–12%</div>
-      </div>
-      <div class="card">
-        <div class="value">96%</div>
-        <div class="label">Compliance Rate</div>
-      </div>
-      <div class="card">
-        <div class="value">15</div>
-        <div class="label">New Hires (This Month)</div>
-        <div class="trend up">+25%</div>
+      <div class="title" id="pageTitle">Dashboard</div>
+      <div class="profile">
+        <div class="profile-icon" id="profileBtn" title="Open menu"></div>
+        <div class="profile-menu" id="profileMenu" role="menu" aria-hidden="true">
+          <a href="#" data-open-modal="profile">View Profile</a>
+          <a href="#" id="toggleTheme">Toggle Compact Mode</a>
+          <a href="#" id="logoutFake">Sign out</a>
+        </div>
       </div>
     </div>
 
-    <div class="panel-container">
-      <div class="panel">
-        <h3>Recent Activity</h3>
-        <div class="list">
-          <div class="item"><span>John submitted leave</span><span>2h ago</span></div>
-          <div class="item"><span>Payroll processed</span><span>Yesterday</span></div>
-          <div class="item"><span>Jessica updated profile</span><span>2d ago</span></div>
-          <div class="item"><span>Mark joined</span><span>3d ago</span></div>
+
+
+    <!-- ===== Views ===== -->
+    <section id="view-dashboard" class="view active" aria-label="Dashboard">
+      <div class="cards">
+        <div class="card" data-open-modal="employees">
+          <div class="value" id="totalEmployees">256</div>
+          <div class="label">Total Employees</div>
+          <div class="trend up">+5%</div>
+        </div>
+        <div class="card" data-open-modal="leave">
+          <div class="value" id="pendingLeavesCount">18</div>
+          <div class="label">Pending Leave Requests</div>
+          <div class="trend down">–12%</div>
+        </div>
+        <div class="card" data-open-modal="compliance">
+          <div class="value" id="complianceRate">96%</div>
+          <div class="label">Compliance Rate</div>
+        </div>
+        <div class="card" data-open-modal="hires">
+          <div class="value" id="newHiresThisMonth">15</div>
+          <div class="label">New Hires (This Month)</div>
+          <div class="trend up">+25%</div>
         </div>
       </div>
-      <div class="panel">
-        <h3>New Hires</h3>
-        <div class="list">
-          <div class="item"><span>Mark Santos</span><span>Oct 5</span></div>
-          <div class="item"><span>Paula Gomez</span><span>Oct 3</span></div>
-          <div class="item"><span>Samuel Cruz</span><span>Sep 28</span></div>
+
+      <div class="panel-container">
+        <div class="panel">
+          <h3>Recent Activity</h3>
+          <div class="list" id="activityList"></div>
+        </div>
+        <div class="panel">
+          <h3>New Hires</h3>
+          <div class="list" id="newHiresList"></div>
+        </div>
+        <div class="panel">
+          <h3>Employee Growth (6 Months)</h3>
+          <div class="chart-placeholder"><canvas id="growthChart" width="600" height="220" aria-label="Growth chart"></canvas></div>
         </div>
       </div>
-      <div class="panel">
-        <h3>Employee Growth (6 Months)</h3>
-        <div class="chart-placeholder">[Chart Placeholder]</div>
+    </section>
+
+    <section id="view-employees" class="view" aria-label="Employees">
+      <div class="panel" style="margin: 24px;">
+        <h3>Employees</h3>
+        <div style="display:flex; gap:10px; margin:10px 0; flex-wrap:wrap;">
+          <input id="empSearch" type="text" placeholder="Search by name or dept…" style="flex:1; padding:8px 10px; border:1px solid #ccc; border-radius:8px;"/>
+          <select id="empDept" style="padding:8px 10px; border:1px solid #ccc; border-radius:8px;">
+            <option value="">All Departments</option>
+            <option>Operations</option>
+            <option>Sales</option>
+            <option>HR</option>
+            <option>Engineering</option>
+          </select>
+        </div>
+        <div class="list" style="max-height:none;">
+          <table id="empTable" aria-label="Employees table">
+            <thead><tr><th>Name</th><th>Department</th><th>Role</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
       </div>
+    </section>
+
+    <section id="view-payroll" class="view" aria-label="Payroll">
+      <div class="panel" style="margin: 24px;">
+        <h3>Payroll</h3>
+        <p style="color:var(--muted); margin-top:8px;">Prototype actions: run payroll, export, fix exception.</p>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button class="btn primary" id="runPayroll">Run Payroll</button>
+          <button class="btn" id="exportPayroll">Export CSV</button>
+          <button class="btn danger" id="fixExceptions">Fix Exceptions (2)</button>
+        </div>
+        <div id="payrollStatus" style="margin-top:14px;"></div>
+      </div>
+    </section>
+
+    <section id="view-attendance" class="view" aria-label="Attendance">
+      <div class="panel" style="margin: 24px;">
+        <h3>Attendance</h3>
+        <p style="color:var(--muted); margin-top:8px;">This view shows a simple log for prototyping.
+        </p>
+        <div class="list" id="attendanceList"></div>
+      </div>
+    </section>
+
+    <section id="view-profile" class="view" aria-label="Profile">
+      <div class="panel" style="margin: 24px;">
+        <h3>Maria Santos</h3>
+        <p style="color:var(--muted); margin-top:8px;">HR & Payroll Officer • MotorPH</p>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+          <button class="btn" id="editProfile">Edit</button>
+          <button class="btn" id="changeAvatar">Change Avatar</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="view-settings" class="view" aria-label="Settings">
+      <div class="panel" style="margin: 24px;">
+        <h3>Settings</h3>
+        <label style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+          <input type="checkbox" id="compactMode"> Compact spacing
+        </label>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Modal (Multi-use) ===== -->
+  <div class="modal" id="modalRoot" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="dialog" role="document">
+      <header>
+        <strong id="modalTitle">Modal</strong>
+        <button class="btn ghost" data-close-modal>✕</button>
+      </header>
+      <main id="modalBody">Loading…</main>
+      <footer id="modalFooter">
+        <button class="btn" data-close-modal>Close</button>
+      </footer>
     </div>
   </div>
 
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ===== Mock Data =====
+    const state = {
+      employees: [
+        { id: 1, name: 'John Bautista', dept: 'Operations', role: 'Dispatcher', status: 'Active' },
+        { id: 2, name: 'Jessica Lim', dept: 'HR', role: 'Recruiter', status: 'Active' },
+        { id: 3, name: 'Mark Santos', dept: 'Sales', role: 'Account Exec', status: 'Probation' },
+        { id: 4, name: 'Paula Gomez', dept: 'Sales', role: 'Associate', status: 'Active' },
+        { id: 5, name: 'Samuel Cruz', dept: 'Engineering', role: 'QA', status: 'Active' },
+        { id: 6, name: 'Andrea Reyes', dept: 'Engineering', role: 'Frontend Dev', status: 'Active' },
+        { id: 7, name: 'Miguel Dela Cruz', dept: 'Operations', role: 'Rider', status: 'Active' },
+      ],
+      activities: [
+        { text: 'John submitted leave', time: '2h ago' },
+        { text: 'Payroll processed', time: 'Yesterday' },
+        { text: 'Jessica updated profile', time: '2d ago' },
+        { text: 'Mark joined', time: '3d ago' },
+      ],
+      newHires: [
+        { name: 'Mark Santos', date: 'Oct 5' },
+        { name: 'Paula Gomez', date: 'Oct 3' },
+        { name: 'Samuel Cruz', date: 'Sep 28' },
+      ],
+      leaves: JSON.parse(localStorage.getItem('leaves') || 'null') || [
+        { id: 'L-1001', name: 'John Bautista', type: 'Sick', days: 2, status: 'Pending' },
+        { id: 'L-1002', name: 'Jessica Lim', type: 'Vacation', days: 3, status: 'Pending' },
+        { id: 'L-1003', name: 'Miguel Dela Cruz', type: 'Emergency', days: 1, status: 'Pending' },
+      ],
+      attendance: [
+        { name: 'John Bautista', when: 'Today 8:01 AM', status: 'Late' },
+        { name: 'Jessica Lim', when: 'Today 7:58 AM', status: 'On time' },
+        { name: 'Samuel Cruz', when: 'Yesterday 5:01 PM', status: 'Overtime' },
+      ],
+      ui: { route: 'dashboard', compact: JSON.parse(localStorage.getItem('compact')||'false') }
+    };
+
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+
+    // ===== Router =====
+    function setRoute(route){
+      state.ui.route = route; location.hash = route;
+      $$('#pageTitle').forEach(el=> el.textContent = route[0].toUpperCase()+route.slice(1));
+      $$('.view').forEach(v => v.classList.remove('active'));
+      const view = $('#view-'+route); if(view) view.classList.add('active');
+      $$('.nav-link').forEach(a => a.classList.toggle('active', a.dataset.route===route));
+    }
+    window.addEventListener('hashchange', () => {
+      const route = location.hash.replace('#','') || 'dashboard';
+      setRoute(route);
+    });
+
+    // ===== Populate Lists =====
+    function renderActivity(){
+      const box = $('#activityList'); box.innerHTML = '';
+      state.activities.forEach(a => {
+        const row = document.createElement('div'); row.className='item';
+        row.innerHTML = `<span>${a.text}</span><span class="tag">${a.time}</span>`; box.appendChild(row);
+      });
+    }
+    function renderHires(){
+      const box = $('#newHiresList'); box.innerHTML = '';
+      state.newHires.forEach(h => {
+        const row = document.createElement('div'); row.className='item';
+        row.innerHTML = `<span>${h.name}</span><span class="tag">${h.date}</span>`; box.appendChild(row);
+      });
+    }
+    function renderAttendance(){
+      const box = $('#attendanceList'); box.innerHTML = '';
+      state.attendance.forEach(a => {
+        const row = document.createElement('div'); row.className='item';
+        row.innerHTML = `<span>${a.name}</span><span class="tag">${a.when} • ${a.status}</span>`; box.appendChild(row);
+      });
+    }
+
+    // ===== Employees Table =====
+    function renderEmployees(){
+      const tbody = $('#empTable tbody'); tbody.innerHTML = '';
+      const q = $('#empSearch').value.toLowerCase();
+      const dept = $('#empDept').value;
+      state.employees
+        .filter(e => (!dept || e.dept===dept) && (!q || (e.name.toLowerCase().includes(q) || e.dept.toLowerCase().includes(q))))
+        .forEach(e => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${e.name}</td>
+            <td>${e.dept}</td>
+            <td>${e.role}</td>
+            <td><span class="tag">${e.status}</span></td>
+            <td><button class="btn" data-open-emp="${e.id}">View</button></td>
+          `; tbody.appendChild(tr);
+        });
+    }
+
+    // ===== Growth Chart (vanilla canvas) =====
+    function drawChart(){
+      const el = document.getElementById('growthChart');
+      if(!el) return; const ctx = el.getContext('2d');
+      const months = ['May','Jun','Jul','Aug','Sep','Oct'];
+      const vals = [230, 236, 241, 247, 251, 256];
+      const W = el.width, H = el.height, p=24; // padding
+      ctx.clearRect(0,0,W,H);
+      // axes
+      ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(p,H-p); ctx.lineTo(W-p,H-p); ctx.moveTo(p,H-p); ctx.lineTo(p,p); ctx.stroke();
+      // bars
+      const max = Math.max(...vals)*1.05; const bw = (W-2*p)/months.length*0.6; const gap = (W-2*p)/months.length*0.4;
+      months.forEach((m,i)=>{
+        const x = p + i*(bw+gap) + gap/2; const h = (vals[i]/max)*(H-2*p); const y = H-p-h;
+        ctx.fillStyle = '#93c5fd'; ctx.fillRect(x,y,bw,h);
+        ctx.fillStyle = '#475569'; ctx.textAlign='center'; ctx.font='12px Segoe UI'; ctx.fillText(m, x+bw/2, H-8);
+      });
+      // labels
+      ctx.fillStyle = '#111827'; ctx.font='12px Segoe UI'; ctx.textAlign='left'; ctx.fillText('Employees', p, p-6);
+    }
+
+    // ===== Modal Utilities =====
+    const modal = $('#modalRoot');
+    function openModal(key, payload){
+      const t = $('#modalTitle'), b = $('#modalBody'), f = $('#modalFooter');
+      f.innerHTML = '<button class="btn" data-close-modal>Close</button>';
+      if(key==='leave'){
+        t.textContent = 'Pending Leave Requests';
+        b.innerHTML = '';
+        const table = document.createElement('table');
+        table.innerHTML = '<thead><tr><th>ID</th><th>Employee</th><th>Type</th><th>Days</th><th>Status</th><th></th></tr></thead><tbody></tbody>';
+        const tb = table.querySelector('tbody');
+        state.leaves.forEach(l=>{
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${l.id}</td><td>${l.name}</td><td>${l.type}</td><td>${l.days}</td><td><span class="tag">${l.status}</span></td>
+          <td style="white-space:nowrap; display:flex; gap:6px;">
+            <button class="btn success" data-approve="${l.id}">Approve</button>
+            <button class="btn danger" data-reject="${l.id}">Reject</button>
+          </td>`; tb.appendChild(tr);
+        });
+        b.appendChild(table);
+        f.innerHTML += '<button class="btn primary" id="bulkApprove">Approve All</button>';
+      }
+      else if(key==='employees'){
+        t.textContent = 'Employees Overview';
+        b.innerHTML = `<p style="color:var(--muted); margin-bottom:10px;">Quick actions for employees.</p>`;
+        const grid = document.createElement('div'); grid.style.display='grid'; grid.style.gridTemplateColumns='repeat(auto-fit, minmax(180px,1fr))'; grid.style.gap='8px';
+        grid.innerHTML = `
+          <button class="btn" data-route="employees">Open Employees View</button>
+          <button class="btn" id="addEmployee">Add Employee</button>
+          <button class="btn" id="importEmployees">Import CSV</button>
+        `; b.appendChild(grid);
+      }
+      else if(key==='compliance'){
+        t.textContent = 'Compliance';
+        b.innerHTML = '<p>Compliance rate is stable at <strong>96%</strong>. Outstanding trainings: 4.</p>';
+      }
+      else if(key==='hires'){
+        t.textContent = 'New Hires (This Month)';
+        const list = state.newHires.map(h=>`<div class="item"><span>${h.name}</span><span class="tag">${h.date}</span></div>`).join('');
+        b.innerHTML = `<div class="list">${list}</div>`;
+      }
+      else if(key==='profile'){
+        t.textContent = 'Profile';
+        b.innerHTML = '<p>Maria Santos • HR & Payroll Officer</p>';
+      }
+      else if(key==='emp'){
+        const emp = state.employees.find(e=>e.id==payload);
+        t.textContent = emp?.name || 'Employee';
+        b.innerHTML = `<p>Dept: <strong>${emp.dept}</strong> • Role: <strong>${emp.role}</strong> • Status: <span class="tag">${emp.status}</span></p>`;
+        f.innerHTML += `<button class="btn primary" id="promoteEmp">Promote</button>`;
+      }
+      modal.classList.add('open'); modal.setAttribute('aria-hidden','false');
+    }
+    function closeModal(){ modal.classList.remove('open'); modal.setAttribute('aria-hidden','true'); }
+
+    // ===== Toast =====
+    function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2200); }
+
+    // ===== Events =====
+    document.addEventListener('click', (e)=>{
+      // Navigation
+      const nav = e.target.closest('.nav-link');
+      if(nav && nav.dataset.route){ e.preventDefault(); setRoute(nav.dataset.route); }
+
+      // Open modal from card or link
+      const open = e.target.closest('[data-open-modal]');
+      if(open){ e.preventDefault(); openModal(open.dataset.openModal); }
+
+      // Modal close
+      if(e.target.matches('[data-close-modal]') || e.target === modal){ closeModal(); }
+
+      // Approve / Reject
+      const appr = e.target.closest('[data-approve]');
+      if(appr){ const id=appr.dataset.approve; updateLeave(id,'Approved'); }
+      const rej = e.target.closest('[data-reject]');
+      if(rej){ const id=rej.dataset.reject; updateLeave(id,'Rejected'); }
+
+      // Bulk approve
+      if(e.target.id==='bulkApprove'){
+        state.leaves = state.leaves.map(l=>({...l, status:'Approved'})); persistLeaves(); openModal('leave'); toast('All leaves approved'); updatePendingBadge();
+      }
+
+      // Employees table row actions
+      const empBtn = e.target.closest('[data-open-emp]');
+      if(empBtn){ openModal('emp', empBtn.dataset.openEmp); }
+
+      // Profile menu
+      if(e.target.id==='profileBtn'){ toggleProfileMenu(); }
+      else if(!e.target.closest('#profileMenu')){ $('#profileMenu').style.display='none'; }
+
+      if(e.target.id==='addEmployee'){ toast('Add Employee (prototype)'); }
+      if(e.target.id==='importEmployees'){ toast('Import CSV (prototype)'); }
+
+      if(e.target.id==='runPayroll'){ $('#payrollStatus').textContent = 'Running payroll…'; setTimeout(()=>{ $('#payrollStatus').textContent='Payroll completed successfully.'; toast('Payroll run complete'); }, 1000); }
+      if(e.target.id==='exportPayroll'){ exportPayrollCsv(); }
+      if(e.target.id==='fixExceptions'){ toast('2 exceptions resolved'); e.target.textContent='No Exceptions'; e.target.disabled=true; }
+
+      if(e.target.dataset.route){ setRoute(e.target.dataset.route); closeModal(); }
+
+      if(e.target.id==='logoutFake'){ toast('Signed out (prototype)'); }
+
+      if(e.target.id==='toggleTheme'){ document.body.classList.toggle('compact'); toast('Toggled compact mode'); }
+    });
+
+    $('#globalSearch').addEventListener('input', () => {
+      const q = $('#globalSearch').value.toLowerCase();
+      // Filter activity & employees as a demo
+      renderActivity();
+      $$('#activityList .item').forEach(i=>{ i.style.display = i.textContent.toLowerCase().includes(q)?'flex':'none'; });
+      if(state.ui.route==='employees'){ renderEmployees(); }
+      $('#clearSearch').style.visibility = q? 'visible':'hidden';
+    });
+    $('#clearSearch').addEventListener('click', ()=>{ $('#globalSearch').value=''; $('#globalSearch').dispatchEvent(new Event('input')); $('#globalSearch').focus(); });
+
+    $('#empSearch').addEventListener('input', renderEmployees);
+    $('#empDept').addEventListener('change', renderEmployees);
+
+    $('#compactMode').addEventListener('change', (e)=>{
+      document.body.classList.toggle('compact', e.target.checked); localStorage.setItem('compact', JSON.stringify(e.target.checked));
+    });
+
+    function toggleProfileMenu(){ const m = $('#profileMenu'); m.style.display = (m.style.display==='block'?'none':'block'); }
+
+    function updateLeave(id, status){
+      state.leaves = state.leaves.map(l => l.id===id? {...l, status}: l);
+      persistLeaves(); openModal('leave'); toast(`Leave ${status.toLowerCase()}`); updatePendingBadge();
+    }
+    function persistLeaves(){ localStorage.setItem('leaves', JSON.stringify(state.leaves)); }
+    function updatePendingBadge(){
+      const pending = state.leaves.filter(l=>l.status==='Pending').length; $('#pendingLeavesCount').textContent = pending;
+    }
+
+    // ===== Export CSV (prototype) =====
+    function exportPayrollCsv(){
+      const rows = [ ['Employee','Net Pay','Period'], ['John Bautista','35000','Oct 1-15'], ['Jessica Lim','42000','Oct 1-15'] ];
+      const csv = rows.map(r=>r.join(',')).join('\n');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'payroll.csv'; a.click(); URL.revokeObjectURL(url); toast('Exported payroll.csv');
+    }
+
+    // ===== Init =====
+    function init(){
+      // Route
+      const initial = location.hash.replace('#','') || 'dashboard'; setRoute(initial);
+      // Data renders
+      renderActivity(); renderHires(); renderEmployees(); renderAttendance(); drawChart();
+      // Compact mode
+      document.body.classList.toggle('compact', state.ui.compact); $('#compactMode').checked = state.ui.compact;
+      updatePendingBadge();
+      // Title sync on view switch handled in setRoute
+    }
+
+    // Redraw chart on resize for good measure
+    window.addEventListener('resize', drawChart);
+    window.addEventListener('load', init);
+  </script>
+
+  <style>
+    /* Compact mode tweaks */
+    body.compact .card { padding: 14px; }
+    body.compact .panel { padding: 12px; }
+    body.compact .topbar { padding: 12px 16px; }
+    body.compact .cards { gap: 14px; padding: 16px; }
+  </style>
 </body>
 </html>
